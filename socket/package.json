@@ -1,0 +1,19 @@
+{
+  "name": "socket",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.0",
+    "geolib": "^3.3.4",
+    "socket": "file:",
+    "ws": "^8.18.0"
+  }
+}

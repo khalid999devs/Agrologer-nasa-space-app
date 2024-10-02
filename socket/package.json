@@ -13,6 +13,7 @@
   "dependencies": {
     "express": "^4.21.0",
     "geolib": "^3.3.4",
+    "jsonwebtoken": "^9.0.2",
     "socket": "file:",
     "ws": "^8.18.0"
   }

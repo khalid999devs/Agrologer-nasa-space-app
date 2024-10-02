@@ -2,7 +2,10 @@ const { verify } = require('jsonwebtoken');
 const { UnauthorizedError } = require('../errors');
 
 const clientValidate = (req, res, next) => {
-  let token = req.headers?.authToken;
+  let token = req.headers?.authorization;
+  if (!token) {
+    throw new UnauthorizedError('Please login to access this content!');
+  }
   token = token?.split(' ')[1];
   if (!token) {
     return res.json({ succeed: false, msg: 'user not logged in' });

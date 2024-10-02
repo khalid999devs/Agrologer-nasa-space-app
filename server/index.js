@@ -20,7 +20,7 @@ const corOptions = {
   credentials: true,
 };
 
-app.use(cors(corOptions));
+app.use(cors());
 
 //middlewares
 app.use(express.json());
@@ -30,6 +30,32 @@ app.use(cookieParser('secret'));
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
 //routers
+app.get('/test', (req, res) => {
+  res.json({
+    succeed: true,
+    msg: 'Successfully connected to the server!',
+  });
+});
+
+const userRouter = require('./routers/users');
+const discussionRouter = require('./routers/discussions');
+const alertsRouter = require('./routers/alerts');
+const weatherRoute = require('./routers/weathers');
+const predictionsRoute = require('./routers/predictions');
+const settingsRoute = require('./routers/settings');
+const agrolyzerRoute = require('./routers/agrolyzers');
+const irrigationRoute = require('./routers/irrigations');
+const dashboardRoute = require('./routers/dashboards');
+
+app.use('/api/users', userRouter);
+app.use('/api/discussions', discussionRouter);
+app.use('/api/alerts', alertsRouter);
+app.use('/api/weathers', weatherRoute);
+app.use('/api/predictions', predictionsRoute);
+app.use('/api/dashboard', dashboardRoute);
+app.use('/api/setting', settingsRoute);
+app.use('/api/irrigations', irrigationRoute);
+app.use('/api/agrolyzer', agrolyzerRoute);
 
 //notfound and errors
 const errorHandlerMiddleWare = require('./middlewares/errorHandler');

@@ -1,8 +1,9 @@
-const { clients } = require('../models');
-const { UnauthenticatedError, BadRequestError } = require('../errors');
-const { hashSync, compare } = require('bcryptjs');
-const deleteFile = require('../utils/deleteFile');
-const hashSalt = Number(process.env.SALT);
+const { users } = require('../models');
+const {
+  UnauthenticatedError,
+  BadRequestError,
+  UnauthorizedError,
+} = require('../errors');
 
 const passwordValidate = async (req, res, next) => {
   const { id, mode } = req.user;
@@ -20,20 +21,29 @@ const passwordValidate = async (req, res, next) => {
 };
 
 const clientRegValidate = async (req, res, next) => {
-  const { fullName, phone, password, address, property } = req.body;
-  if (fullName && phone) {
+  const { fullName, phoneNum, email } = req.body;
+  if (phoneNum) {
     const username = fullName.split(' ')[0].toLowerCase() + `@${Date.now()}`;
+
+    const isUser = await users.findOne({
+      where: { phoneNum: phoneNum.trim() },
+    });
+    if (isUser) {
+      if (!isUser.fullName) {
+        req.mode = 'update';
+      } else {
+        throw new UnauthorizedError('User already exists!');
+      }
+    }
 
     const data = {
       fullName: fullName.trim(),
-      email,
-      phone: phone.trim(),
+      phoneNum: phoneNum.trim(),
       userName: username,
+      email,
       // password: hashedPass,
-      address,
     };
     req.user = data;
-    req.property = property;
 
     next();
   } else {

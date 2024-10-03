@@ -1,0 +1,11 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Sockets
+psycopg2-binary
+scikit-learn
+numpy
+pandas
+scikit-learn
+matplotlib==3.8.2
+requests

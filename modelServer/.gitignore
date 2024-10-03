@@ -1,0 +1,31 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+ENV/
+env/
+.env
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Distribution / packaging
+.DS_Store
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Logs
+*.log
+
+# Miscellaneous
+*.sqlite3

@@ -1,11 +1,5 @@
 import { Tabs } from 'expo-router';
-import {
-  Dimensions,
-  Image,
-  ImageSourcePropType,
-  Text,
-  View,
-} from 'react-native';
+import { Image, ImageSourcePropType, Text, View } from 'react-native';
 
 import { icons } from '@/constants';
 
@@ -22,13 +16,13 @@ const TabIcon = ({
     className={`flex-1 flex-row justify-center items-center rounded-full ${focused ? 'bg-general-300 opacity-100' : 'opacity-70'}`}
   >
     <View
-      className={`rounded-full w-auto h-12 items-center justify-center ${focused ? 'bg-general-400' : ''}`}
+      className={`rounded-full w-auto h-10 items-center justify-center ${focused ? 'bg-general-400' : ''}`}
     >
       <Image
         source={source}
         tintColor='white'
         resizeMode='contain'
-        className='w-8 h-8'
+        className='w-6 h-6'
       />
       <Text className='text-xs text-zinc-200'>{text || 'Home'}</Text>
     </View>
@@ -47,7 +41,7 @@ export default function Layout() {
           backgroundColor: '#02A05E',
           paddingBottom: 0, // ios only
           overflow: 'hidden',
-          height: 78,
+          height: 68,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -57,7 +51,7 @@ export default function Layout() {
       }}
     >
       <Tabs.Screen
-        name='index'
+        name='home'
         options={{
           title: 'Home',
           headerShown: false,
@@ -67,7 +61,7 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name='explore'
+        name='tools'
         options={{
           title: 'Tools',
           headerShown: false,

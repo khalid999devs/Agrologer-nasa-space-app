@@ -25,10 +25,73 @@ import target from '@/assets/icons/target.png';
 import to from '@/assets/icons/to.png';
 import notifications from '@/assets/icons/notifications.png';
 import tools from '@/assets/icons/tools.png';
+import backGreenArrow from '@/assets/icons/backGreenArrow.png';
+import predictionsIcon from '@/assets/icons/predictions.png';
+import alertsIcon from '@/assets/icons/alert.png';
+import pestIcon from '@/assets/icons/pest.png';
+import soilIcon from '@/assets/icons/soil.png';
+import AgribotIcon from '@/assets/icons/Agribot.png';
+import CommunityIcon from '@/assets/icons/Community.png';
+import HelpIcon from '@/assets/icons/Help.png';
+import IrrigationIcon from '@/assets/icons/Irrigation.png';
+import TesterIcon from '@/assets/icons/Tester.png';
+import ArrowrightIcon from '@/assets/icons/arrowRight.png';
+import ProfileIcon from '@/assets/icons/profileIcon.png';
+import SettingsIcon from '@/assets/icons/settingsIcon.png';
+import SheetIcon from '@/assets/icons/sheetIcon.png';
+import CropIcon from '@/assets/icons/leafIcon.png';
+import BookIcon from '@/assets/icons/bookIcon.png';
+import FloodIcon from '@/assets/icons/flood.png';
+import DroughtIcon from '@/assets/icons/drought.png';
 
-export const images = {};
+import headerLogo from '@/assets/images/header-logo.png';
+import screenLogo from '@/assets/images/screen-logo.png';
+import authLogo from '@/assets/images/auth-logo.png';
+import enLang from '@/assets/images/language-en.png';
+import deviceOn from '@/assets/images/device-on.png';
+import deviceOff from '@/assets/images/device-off.png';
+import onSwitch from '@/assets/images/on-switch.png';
+import offSwitch from '@/assets/images/off-switch.png';
+import connectedLogo from '@/assets/images/connected-logo.png';
+import disconnectedLogo from '@/assets/images/disconnected-logo.png';
+import pointer from '@/assets/images/pointer.png';
+import scale from '@/assets/images/scale.png';
+import placeholder from '@/assets/images/placeholder.png';
+import HelpImage from '@/assets/images/helpIcon.png';
+import CommunityBtn from '@/assets/images/communityBtn.png';
+
+export const images = {
+  CommunityBtn,
+  HelpImage,
+  placeholder,
+  headerLogo,
+  screenLogo,
+  authLogo,
+  enLang,
+  deviceOn,
+  deviceOff,
+  onSwitch,
+  offSwitch,
+  connectedLogo,
+  disconnectedLogo,
+  pointer,
+  scale,
+};
 
 export const icons = {
+  FloodIcon,
+  DroughtIcon,
+  ProfileIcon,
+  SettingsIcon,
+  SheetIcon,
+  CropIcon,
+  BookIcon,
+  ArrowrightIcon,
+  AgribotIcon,
+  CommunityIcon,
+  HelpIcon,
+  IrrigationIcon,
+  TesterIcon,
   tools,
   notifications,
   arrowDown,
@@ -56,6 +119,11 @@ export const icons = {
   star,
   target,
   to,
+  backGreenArrow,
+  predictionsIcon,
+  alertsIcon,
+  pestIcon,
+  soilIcon,
 };
 
 export const data = {};

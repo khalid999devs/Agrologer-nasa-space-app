@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSONB,
         defaultValue: [],
       },
+      crops: {
+        type: DataTypes.JSONB,
+        defaultValue: [],
+      },
       farmerLoc: {
         type: DataTypes.JSONB,
         defaultValue: {},

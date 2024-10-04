@@ -1,12 +1,9 @@
 import { View, Text } from 'react-native';
 import React from 'react';
+import NotificationsScreen from '@/screens/NotificationsScreen';
 
 const notifications = () => {
-  return (
-    <View>
-      <Text>notifications</Text>
-    </View>
-  );
+  return <NotificationsScreen />;
 };
 
 export default notifications;

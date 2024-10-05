@@ -8,6 +8,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import CommunityInputSystem from '@/components/Forms/CommunityInputSystem';
 
 const CommunityScreen = () => {
+  const handleSubmit = () => {};
+
   return (
     <View className='pb-12 flex-1 relative'>
       <Header />
@@ -21,7 +23,7 @@ const CommunityScreen = () => {
         />
       </View>
 
-      <CommunityInputSystem />
+      <CommunityInputSystem onSubmit={handleSubmit} />
     </View>
   );
 };

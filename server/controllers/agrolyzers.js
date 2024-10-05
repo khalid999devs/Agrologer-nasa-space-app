@@ -6,6 +6,7 @@ const {
   UnauthorizedError,
 } = require('../errors');
 const { sendToWebSocketServer } = require('../utils/sendToSocketServer');
+const { redis } = require('../utils/redis');
 
 const getAgrolyzer = async (req, res) => {
   const userId = req.user.id;
@@ -26,6 +27,51 @@ const updateAgrolyzer = async (req, res) => {
   res.json({
     succeed: true,
     msg: 'Successfully updated the agrolyzer data!',
+  });
+};
+
+const getSensorData = async (req, res) => {
+  const userId = 1;
+  const { connectionData } = req.body;
+  let cursor = '0';
+  const pattern = `${userId}*`;
+  const count = 100;
+  let keys = [];
+
+  do {
+    const result = await new Promise((resolve, reject) => {
+      client.scan(cursor, 'MATCH', pattern, 'COUNT', count, (err, reply) => {
+        if (err) return reject(err);
+        resolve(reply);
+      });
+    });
+
+    cursor = result[0];
+    keys = keys.concat(result[1]);
+  } while (cursor !== '0');
+
+  if (keys.length < 1) {
+    return res.json({
+      succeed: true,
+      msg: 'No sensor data available',
+      data: null,
+    });
+  }
+
+  let latestKey = keys.reduce((latest, current) => {
+    const latestTimestamp = parseInt(latest.split('@')[1], 10);
+    const currentTimestamp = parseInt(current.split('@')[1], 10);
+    return currentTimestamp > latestTimestamp ? current : latest;
+  });
+  let sensorData = await redis.get(latestKey);
+  sensorData = JSON.parse(sensorData);
+
+  const newSensorData = await agrolyzers.create({ sensorData, connectionData });
+
+  res.json({
+    succeed: true,
+    msg: 'Sensor data available!',
+    data: newSensorData,
   });
 };
 
@@ -60,4 +106,9 @@ const getRecommendationData = async (req, res) => {
   });
 };
 
-module.exports = { getAgrolyzer, updateAgrolyzer, getRecommendationData };
+module.exports = {
+  getAgrolyzer,
+  updateAgrolyzer,
+  getRecommendationData,
+  getSensorData,
+};

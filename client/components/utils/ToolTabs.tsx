@@ -13,7 +13,7 @@ const ToolTabs = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className='p-3.5 mb-3 mr-3 w-[46%] rounded-lg bg-white'
+      className='p-3.5 mb-3 w-[48%] rounded-lg bg-white'
     >
       <Text className='text-secondary-main font-pSansBold text-left mb-4'>
         {title || 'Tool'}

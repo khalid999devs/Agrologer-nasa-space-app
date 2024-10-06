@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, Pressable } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
 import { icons } from '@/constants';
 
@@ -20,9 +20,9 @@ const IconBtnIcon = ({
       <TouchableOpacity onPress={onBackPress}>
         <Image source={icon || icons.backGreenArrow}></Image>
       </TouchableOpacity>
-      <Pressable onPress={onBtnPress}>
+      <TouchableOpacity onPress={onBtnPress} className=''>
         <Image source={btnImg}></Image>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

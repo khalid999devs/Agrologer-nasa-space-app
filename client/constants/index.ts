@@ -43,6 +43,7 @@ import CropIcon from '@/assets/icons/leafIcon.png';
 import BookIcon from '@/assets/icons/bookIcon.png';
 import FloodIcon from '@/assets/icons/flood.png';
 import DroughtIcon from '@/assets/icons/drought.png';
+import attached from '@/assets/icons/attached.png';
 
 import headerLogo from '@/assets/images/header-logo.png';
 import screenLogo from '@/assets/images/screen-logo.png';
@@ -59,8 +60,10 @@ import scale from '@/assets/images/scale.png';
 import placeholder from '@/assets/images/placeholder.png';
 import HelpImage from '@/assets/images/helpIcon.png';
 import CommunityBtn from '@/assets/images/communityBtn.png';
+import IrrigationBtn from '@/assets/images/irrigationBtn.png';
 
 export const images = {
+  IrrigationBtn,
   CommunityBtn,
   HelpImage,
   placeholder,
@@ -79,6 +82,7 @@ export const images = {
 };
 
 export const icons = {
+  attached,
   FloodIcon,
   DroughtIcon,
   ProfileIcon,

@@ -13,6 +13,7 @@ export interface GlobalContextType {
   setisLoggedIn?: (value: boolean) => void;
   isDeviceConnected?: boolean;
   setIsDeviceConnected?: (value: boolean) => void;
+  user: any;
 }
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
@@ -25,6 +26,7 @@ export const GlobalContextProvider = ({
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [isLoading, setisLoading] = useState(true);
   const [isDeviceConnected, setIsDeviceConnected] = useState(false);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     let isMounted = true;
@@ -56,7 +58,13 @@ export const GlobalContextProvider = ({
 
   return (
     <GlobalContext.Provider
-      value={{ isLoggedIn, isLoading, isDeviceConnected, setIsDeviceConnected }}
+      value={{
+        isLoggedIn,
+        isLoading,
+        isDeviceConnected,
+        setIsDeviceConnected,
+        user,
+      }}
     >
       {children}
     </GlobalContext.Provider>

@@ -23,7 +23,7 @@ const char* ssid = "AIUB Student Wi-Fi";
 const char* password = "";  
 
 // Server URL where we send real-time data
-const char* serverName = "https://chemapi.chemgenie.app/test";  
+const char* serverName = "https://agrolyzer.goldendotbd.com/test";  
 
 // Global variables for sensor data
 float temperature, humidity, moisture, ph;

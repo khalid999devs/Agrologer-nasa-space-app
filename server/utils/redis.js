@@ -10,7 +10,7 @@ const redisClient = () => {
 };
 let redis;
 try {
-  redis = new Redis(redisClient(i));
+  redis = new Redis(redisClient());
 } catch (error) {
   console.log(error);
 }

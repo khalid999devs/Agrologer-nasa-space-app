@@ -21,15 +21,12 @@ const attachTokenToResponse = (tokenName, { res, token, expiresInDay }) => {
 };
 
 const sendToken = async (data, res) => {
-  const accessToken = jwt.sign(
-    { id: user.id },
-    process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: '30d',
-    }
-  );
+  const accessToken = sign({ ...data }, process.env.CLIENT_SECRET, {
+    expiresIn: '30d',
+  });
   res.status(201).json({
-    success: true,
+    succeed: true,
+    msg: 'Successful!',
     accessToken,
     result: data,
   });

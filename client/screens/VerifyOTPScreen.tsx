@@ -12,9 +12,14 @@ import { images } from '@/constants';
 import PrimaryButton from '@/components/Buttons/PrimaryButton';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useToast } from 'react-native-toast-notifications';
+import axios from 'axios';
+import { reqs } from '@/axios/requests';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const VerifyOTPScreen = () => {
-  const { phoneNum } = useLocalSearchParams();
+  const { phoneNum, mode } = useLocalSearchParams();
+  const { setUser }: any = useGlobalContext();
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -25,13 +30,30 @@ const VerifyOTPScreen = () => {
         placement: 'bottom',
       });
     } else {
-      console.log({ phoneNum, otp });
-      router.push({
-        pathname: '/(routes)/userInfo',
-        params: {
-          userData: JSON.stringify({}),
-        },
-      });
+      setLoading(true);
+      axios
+        .post(reqs.VERIFY_USER_OTP, { phoneNum, otp, mode })
+        .then(async (res) => {
+          setLoading(false);
+          if (res.data.succeed) {
+            console.log(res.data);
+            await AsyncStorage.setItem('accessToken', res.data.accessToken);
+            if (res.data.result) setUser(res.data.result);
+            router.push({
+              pathname: '/(routes)/userInfo',
+              params: {
+                userData: JSON.stringify(res.data.result),
+              },
+            });
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.show(
+            err.response?.data.msg || 'Something is wrong! Please try again.'
+          );
+          console.log(err);
+        });
     }
   };
 

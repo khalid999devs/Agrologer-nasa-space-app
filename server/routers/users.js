@@ -6,10 +6,11 @@ const {
   verifyOTP,
 } = require('../controllers/users');
 const clientValidate = require('../middlewares/clientTokenVerify');
+const { clientRegValidate } = require('../middlewares/clientValidate');
 
 const router = require('express').Router();
 
-router.post('/register', registerUser);
+router.post('/register', clientRegValidate, registerUser);
 router.post('/otp-send', verifyOTP);
 router.post('/login', loginUser);
 

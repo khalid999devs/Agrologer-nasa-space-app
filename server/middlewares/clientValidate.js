@@ -21,7 +21,9 @@ const passwordValidate = async (req, res, next) => {
 };
 
 const clientRegValidate = async (req, res, next) => {
-  const { fullName, phoneNum, email } = req.body;
+  const { fullName, phoneNum } = req.body;
+  console.log(fullName, phoneNum);
+
   if (phoneNum) {
     const username = fullName.split(' ')[0].toLowerCase() + `@${Date.now()}`;
 
@@ -40,7 +42,6 @@ const clientRegValidate = async (req, res, next) => {
       fullName: fullName.trim(),
       phoneNum: phoneNum.trim(),
       userName: username,
-      email,
       // password: hashedPass,
     };
     req.user = data;
@@ -53,6 +54,5 @@ const clientRegValidate = async (req, res, next) => {
 
 module.exports = {
   clientRegValidate,
-  emailValidate,
   passwordValidate,
 };

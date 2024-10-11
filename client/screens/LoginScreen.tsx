@@ -5,21 +5,39 @@ import PrimaryInput from '@/components/Forms/PrimaryInput';
 import PrimaryButton from '@/components/Buttons/PrimaryButton';
 import { router } from 'expo-router';
 import { useToast } from 'react-native-toast-notifications';
+import axios from 'axios';
+import { reqs } from '@/axios/requests';
 
 const LoginScreen = () => {
   const [phoneNum, setPhoneNum] = useState('');
   const toast = useToast();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = () => {
     // Custom validation
     if (phoneNum) {
-      console.log('phone:', phoneNum);
-      router.push({
-        pathname: '/(routes)/VerifyOTP',
-        params: {
-          phoneNum: phoneNum,
-        },
-      });
+      setLoading(true);
+      axios
+        .post(reqs.USER_LOGIN, { phoneNum })
+        .then((res) => {
+          if (res.data.succeed) {
+            setLoading(false);
+            router.push({
+              pathname: '/(routes)/VerifyOTP',
+              params: {
+                phoneNum: phoneNum,
+                mode: res.data.mode,
+              },
+            });
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.show(
+            err.response?.data.msg || 'Something is wrong! Please try again.'
+          );
+          console.log(err);
+        });
     } else {
       toast.show('Please provide your phone number!');
     }
@@ -42,6 +60,7 @@ const LoginScreen = () => {
             text='Send OTP'
             classes='!w-full mt-4'
             onPress={handleSubmit}
+            disabled={loading}
           />
         </View>
       </View>

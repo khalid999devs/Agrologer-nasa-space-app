@@ -1,9 +1,11 @@
 import { View, Text, ScrollView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 import { router, useLocalSearchParams } from 'expo-router';
 import MapInputs from '@/components/Forms/MapInputs';
 import SelectChoices from '@/components/utils/SelectChoices';
+import * as Location from 'expo-location';
+import MapView from 'react-native-maps';
 
 const UserInfoScreen = () => {
   const toast = useToast();
@@ -14,6 +16,31 @@ const UserInfoScreen = () => {
     fieldLoc: {},
     crops: [],
   });
+
+  const [location, setLocation] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       setErrorMsg('Permission to access location was denied');
+  //       return;
+  //     }
+
+  //     let newLoc = await Location.getCurrentPositionAsync({});
+  //     setLocation(newLoc);
+  //     setLocationData((locationData) => ({
+  //       ...locationData,
+  //       farmerLoc: {
+  //         lat: newLoc.coords.latitude,
+  //         long: newLoc.coords.longitude,
+  //       },
+  //     }));
+  //   })();
+  // }, []);
+
+  console.log(location);
 
   const handleDataSubmit = (cropData: any) => {
     const data = { ...locationData, crops: cropData };
@@ -32,6 +59,7 @@ const UserInfoScreen = () => {
             }));
           }}
           btnHide={Object.keys(locationData.farmerLoc).length > 0}
+          locationData={locationData}
         />
       </View>
       {Object.keys(locationData.farmerLoc).length > 0 && (
@@ -46,6 +74,7 @@ const UserInfoScreen = () => {
               router.push('/(tabs)/home');
             }}
             btnHide={Object.keys(locationData.fieldLoc).length > 0}
+            locationData={locationData}
           />
         </View>
       )}

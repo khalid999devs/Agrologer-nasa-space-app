@@ -6,6 +6,8 @@ import {
   useContext,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { reqs } from '@/axios/requests';
 
 export interface GlobalContextType {
   isLoggedIn: boolean;
@@ -14,6 +16,7 @@ export interface GlobalContextType {
   isDeviceConnected?: boolean;
   setIsDeviceConnected?: (value: boolean) => void;
   user: any;
+  setUser: any;
 }
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
@@ -34,14 +37,22 @@ export const GlobalContextProvider = ({
     const getData = async () => {
       try {
         const accessToken = await AsyncStorage.getItem('accessToken');
-        if (isMounted) {
-          setisLoggedIn(!!accessToken);
+        // if (isMounted) {
+        //   setisLoggedIn(!!accessToken);
+        // }
+        const res = await axios.get(reqs.GET_VALID_USER, {
+          headers: { authorization: `bearer ${accessToken}` },
+        });
+        if (res.data.succeed) {
+          setUser(res.data?.user || {});
+          setisLoggedIn(true);
         }
       } catch (error) {
         console.log(
           'Failed to retrieve access token from async storage',
           error
         );
+        setisLoggedIn(false);
       } finally {
         if (isMounted) {
           setisLoading(false);
@@ -64,6 +75,7 @@ export const GlobalContextProvider = ({
         isDeviceConnected,
         setIsDeviceConnected,
         user,
+        setUser,
       }}
     >
       {children}

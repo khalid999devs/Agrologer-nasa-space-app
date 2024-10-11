@@ -1,6 +1,7 @@
 import { View, Text, KeyboardTypeOptions, TextInput } from 'react-native';
 import React, { useState } from 'react';
 import PrimaryButton from '../Buttons/PrimaryButton';
+import MapView from 'react-native-maps';
 
 interface InputProps {
   title: string;
@@ -16,6 +17,7 @@ interface InputProps {
   inputClasses?: string;
   setLocationData: (props: any) => void;
   btnHide?: boolean;
+  locationData?: any;
 }
 
 const MapInputs = ({
@@ -32,6 +34,7 @@ const MapInputs = ({
   inputClasses,
   setLocationData,
   btnHide = false,
+  locationData,
 }: InputProps) => {
   const [location, setLocation] = useState('');
   const handleMapPoint = () => {};
@@ -53,8 +56,16 @@ const MapInputs = ({
         {showWarning && <Text>{warning}</Text>}
       </View>
 
-      <View className=' w-full h-48 rounded-xl bg-secondary-dark mt-2 mb-2.5'>
-        {/* the map here */}
+      <View className=' w-full h-48 rounded-xl mt-2 mb-2.5'>
+        <MapView
+          style={{ flex: 1 }}
+          initialRegion={{
+            latitude: locationData.farmerLoc.lat,
+            longitude: locationData.farmerLoc.long,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
       </View>
 
       {!btnHide && (

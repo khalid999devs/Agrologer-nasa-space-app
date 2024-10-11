@@ -14,13 +14,15 @@ const {
   UnauthorizedError,
 } = require('../errors');
 const { sendToken } = require('../utils/createToken');
+const twilio = require('twilio');
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
+const client = twilio(accountSid, authToken);
 
 const registerUser = async (req, res) => {
   const userData = req.user;
+
   if (req.mode === 'update') {
     await users.update(userData);
     return res.json({
@@ -48,10 +50,12 @@ const loginUser = async (req, res) => {
   const { phoneNum } = req.body;
 
   let user = await users.findOne({ where: { phoneNum } });
-
+  let mode = 'login';
   if (!user) {
     user = await users.create({ phoneNum });
+    mode = 'reg';
   }
+
   await client.verify.v2
     ?.services(process.env.TWILIO_SERVICE_SID)
     .verifications.create({
@@ -62,30 +66,41 @@ const loginUser = async (req, res) => {
   res.json({
     succeed: true,
     msg: 'OTP sent!',
+    mode,
   });
 };
 
 const verifyOTP = async (req, res) => {
-  const { phoneNum, otp, settingsData, farmerData } = req.body;
+  const { phoneNum, otp, mode } = req.body;
   await client.verify.v2
     .services(process.env.TWILIO_SERVICE_SID)
     .verificationChecks.create({
-      to: phone,
+      to: phoneNum,
       code: otp,
     });
-  let user = await users.findOne({ where: { phoneNum } });
-  const dashboard = await dashboards.create({ userId: user.id });
-  const setting = await settings.create({ ...settingsData, userId: user.id });
-  await predictions.create({});
-  await weathers.create({});
-  await agrolyzers.create({});
-  await user.update(farmerData, { where: { id: user.id } });
 
+  let user = await users.findOne({ where: { phoneNum } });
+  let tokenData = {
+    id: user.id,
+    phoneNum: user.phoneNum,
+    userName: user.userName,
+    fullName: user.fullName,
+  };
+  if (mode === 'reg') {
+    const dashboard = await dashboards.create({ userId: user.id });
+    const setting = await settings.create({ userId: user.id });
+    tokenData.dashboard = dashboard;
+    tokenData.setting = setting;
+    await predictions.create({ userId: user.id });
+    await weathers.create({ userId: user.id });
+    await agrolyzers.create({ userId: user.id });
+    // await user.update(farmerData, { where: { id: user.id } });
+  }
   if (!user) {
     throw new UnauthenticatedError('Please create an account first!');
   }
 
-  sendToken({ user: { ...user, ...farmerData }, dashboard, setting }, res);
+  sendToken(tokenData, res);
 };
 
 const getUser = async (req, res) => {

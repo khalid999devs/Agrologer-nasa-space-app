@@ -61,8 +61,10 @@ import placeholder from '@/assets/images/placeholder.png';
 import HelpImage from '@/assets/images/helpIcon.png';
 import CommunityBtn from '@/assets/images/communityBtn.png';
 import IrrigationBtn from '@/assets/images/irrigationBtn.png';
+import LoadingGIF from '@/assets/images/loading.gif';
 
 export const images = {
+  LoadingGIF,
   IrrigationBtn,
   CommunityBtn,
   HelpImage,

@@ -1,5 +1,6 @@
-import { Text, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { images } from '@/constants';
 
 export interface ButtonProps {
   onPress: () => void;
@@ -19,19 +20,23 @@ const PrimaryButton: React.FC<ButtonProps> = ({
   return (
     <TouchableOpacity
       className={
-        'px-6 rounded-xl py-3 text-xl flex items-center justify-center bg-primary-main ' +
+        `px-6 rounded-xl py-3 text-xl flex items-center justify-center bg-primary-main ${disabled && 'opacity-60'} ` +
         classes
       }
       onPress={onPress}
       disabled={disabled}
     >
-      <Text
-        className={
-          'font-pSansRegular text-onPrimary-main text-lg ' + textClasses
-        }
-      >
-        {text || 'Button'}
-      </Text>
+      {!disabled ? (
+        <Text
+          className={
+            'font-pSansRegular text-onPrimary-main text-lg ' + textClasses
+          }
+        >
+          {text || 'Button'}
+        </Text>
+      ) : (
+        <Image source={images.LoadingGIF} className='w-8 h-8'></Image>
+      )}
     </TouchableOpacity>
   );
 };

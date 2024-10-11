@@ -21,7 +21,9 @@ const Index = () => {
   }
 
   return (
-    <Redirect href={isLoggedIn ? '/(routes)/Onboarding' : '/(tabs)/home'} />
+    <Redirect
+      href={!isLoggedIn ? '/(routes)/Onboarding' : '/(routes)/userInfo'}
+    />
   );
 };
 

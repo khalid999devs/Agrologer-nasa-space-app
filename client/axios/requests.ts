@@ -19,6 +19,9 @@ export const validFileWrapper = (fileImg: any) => {
 
 export const reqs = {
   //user reg
-  USER_REGISTRATION: '/api/user/reg', //post
-  GET_VALID_USER: '/api/user/',
+  USER_REGISTRATION: '/api/users/register', //post
+  USER_LOGIN: '/api/users/login', //post
+  VERIFY_USER_OTP: '/api/users/otp-send', //post
+  GET_VALID_USER: '/api/users/get-user', //get
+  UPDATE_USER: '/api/users/update', //put
 };

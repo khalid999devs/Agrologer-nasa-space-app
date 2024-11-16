@@ -1,6 +1,7 @@
 import { Image, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { images } from '@/constants';
+import FastImage from 'react-native-fast-image';
 
 export interface ButtonProps {
   onPress: () => void;

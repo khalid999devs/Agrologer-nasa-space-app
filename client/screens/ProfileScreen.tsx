@@ -4,15 +4,20 @@ import Header from '@/components/utils/Header';
 import AvatarSec from '@/components/Profile/AvatarSec';
 import { icons, images } from '@/constants';
 import ProfileMenu from '@/components/Profile/ProfileMenu';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const ProfileScreen = () => {
+  const { user }: any = useGlobalContext();
+
+  console.log(user);
+
   return (
     <ScrollView className='pb-12'>
       <Header />
       <View className='px-8 mt-2'>
         <AvatarSec
-          fullName='Yunus Mia'
-          designation='Expert Farmer'
+          fullName={user.fullName || 'Yunus Mia'}
+          designation={user.level?.status || 'Intermediate level'}
           image={images.placeholder}
         />
       </View>

@@ -24,4 +24,18 @@ export const reqs = {
   VERIFY_USER_OTP: '/api/users/otp-send', //post
   GET_VALID_USER: '/api/users/get-user', //get
   UPDATE_USER: '/api/users/update', //put
+  //update settings
+  UPDATE_SETTINGS: '/api/setting/update', //put
+
+  //dashboard
+  GET_DASHBOARD: '/api/dashboard/get', //get with dashboardId params
+  UPDATE_DASHBOARD: '/api/dashboard/update', //put
+
+  //alerts
+  GET_ALERTS: '/api/alerts/get', //get
+  UPDATE_ALERTS: '/api/alerts/update', //put
+
+  //device
+  GET_AGROLYZER: '/api/agrolyzer/get', //get
+  SEND_DEVICE_REQUEST: '/api/users/send-device-request', //post
 };

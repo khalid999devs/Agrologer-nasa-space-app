@@ -40,7 +40,7 @@ const VerifyOTPScreen = () => {
             await AsyncStorage.setItem('accessToken', res.data.accessToken);
             if (res.data.result) setUser(res.data.result);
             router.push({
-              pathname: '/(routes)/userInfo',
+              pathname: mode === 'reg' ? '/(routes)/userInfo' : '/(tabs)/home',
               params: {
                 userData: JSON.stringify(res.data.result),
               },

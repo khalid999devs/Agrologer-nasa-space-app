@@ -3,12 +3,23 @@ import React from 'react';
 import { images } from '@/constants';
 import PrimaryButton from '../Buttons/PrimaryButton';
 
+type ChanceTilesProps = {
+  title: string;
+  image: any;
+  data?: {
+    level: 'normal' | 'medium' | 'high';
+    chanceText: string;
+    desc: string;
+  };
+  classes?: string;
+};
+
 const ChanceTiles = ({
   title,
   image,
   data = { level: 'normal', chanceText: '', desc: '' },
   classes,
-}: any) => {
+}: ChanceTilesProps) => {
   return (
     <View className={'p-3 rounded-lg w-[48%] bg-white ' + classes}>
       <Text className='text-xl text-secondary-main font-pSansBold mb-2'>

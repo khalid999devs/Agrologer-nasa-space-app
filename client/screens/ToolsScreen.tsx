@@ -14,7 +14,7 @@ const ToolsScreen = () => {
       <View className='flex flex-row justify-between mt-6 px-8 flex-wrap w-full'>
         <ToolTabs
           onPress={() => {
-            router.push('/(routes)/device');
+            router.push({ pathname: '/(routes)/device' });
           }}
           title='Agrolyzer'
           icon={icons.TesterIcon}

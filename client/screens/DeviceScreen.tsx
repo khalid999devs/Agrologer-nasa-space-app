@@ -7,10 +7,17 @@ import PrimaryButton from '@/components/Buttons/PrimaryButton';
 import { router } from 'expo-router';
 import { images } from '@/constants';
 import { useToast } from 'react-native-toast-notifications';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
+import axios from 'axios';
+import { reqs } from '@/axios/requests';
 
 const DeviceScreen = () => {
   const toast = useToast();
-  const { isDeviceConnected, setIsDeviceConnected }: any = useGlobalContext();
+  const { isDeviceConnected, setIsDeviceConnected, accessToken }: any =
+    useGlobalContext();
+  let { demo }: any = useLocalSearchParams();
+  demo = demo ? JSON.parse(demo) : false;
+
   const [isTestRunning, setIsTestRunning] = useState(false);
   const [connectionData, setIsConnectionData] = useState({});
   const [todos, setTodos] = useState({});
@@ -18,16 +25,41 @@ const DeviceScreen = () => {
   const [testState, setTestState] = useState<
     'normal' | 'Running' | 'serverSending' | 'done'
   >('normal');
+  const [loading, setLoading] = useState(false);
 
+  const updateAndGetDeviceData = (isUpdate: boolean) => {
+    if (!demo) {
+      setLoading(true);
+      axios
+        .get(`${reqs.GET_AGROLYZER}/${isDeviceConnected}/${isUpdate}`, {
+          headers: { authorization: `bearer ${accessToken}` },
+        })
+        .then((res) => {
+          if (res.data.succeed) {
+            if (res.data.connected !== isDeviceConnected)
+              setIsDeviceConnected(res.data.connected);
+
+            setIsConnectionData(res.data.agrolyzer?.connectionData);
+            setIsSensorData(res.data.agrolyzer?.sensorData);
+            setTodos(res.data.agrolyzer?.todos);
+          } else {
+            toast.show(res.data.message);
+            demo = true;
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          toast.show(
+            err.response.data.message ||
+              'Something went wrong! Please try again.'
+          );
+        });
+    }
+  };
   useEffect(() => {
-    // connect with esp 32 and auto pair using serial bluetooth
-    //update connection data
-    //get realtime data from esp32 using bluetooth
-    //get data in jsonFormat
-    //update test state accordingly
-    //update sensor data
-    //send to server
-  }, [isTestRunning]);
+    updateAndGetDeviceData(false);
+  }, [isDeviceConnected, accessToken]);
 
   return (
     <ScrollView>
@@ -43,11 +75,13 @@ const DeviceScreen = () => {
         <PrimaryButton
           text={isDeviceConnected ? 'Connected' : 'Disconnected'}
           classes={`!py-6 ${!isDeviceConnected && '!bg-red-700'}`}
-          onPress={() =>
-            setIsDeviceConnected(
-              (isDeviceConnected: boolean) => !isDeviceConnected
-            )
-          }
+          onPress={() => {
+            if (!demo) updateAndGetDeviceData(true);
+            else
+              toast.show('This feature is not available in demo mode!', {
+                duration: 2000,
+              });
+          }}
         />
       </View>
       <View className='my-10 px-8 w-full flex items-center justify-center'>
@@ -61,11 +95,18 @@ const DeviceScreen = () => {
         <PrimaryButton
           text={isTestRunning ? 'Running...' : 'Run a test'}
           classes={`!bg-tertiary-brown ${!isDeviceConnected ? 'opacity-60' : 'opacity-100'}`}
+          // disabled={isTestRunning}
           onPress={() => {
-            if (isDeviceConnected) {
-              setIsTestRunning((isTestRunning) => !isTestRunning);
+            if (!demo) {
+              if (isDeviceConnected) {
+                setIsTestRunning((isTestRunning) => !isTestRunning);
+              } else {
+                toast.show('Connect the device first!', { duration: 2000 });
+              }
             } else {
-              toast.show('Connect the device first!', { duration: 2000 });
+              toast.show('This feature is not available in demo mode!', {
+                duration: 2000,
+              });
             }
           }}
         />

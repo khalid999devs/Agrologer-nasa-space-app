@@ -3,12 +3,19 @@ import React from 'react';
 import { images } from '@/constants';
 import PrimaryButton from '../Buttons/PrimaryButton';
 
+type DecisionTilesProps = {
+  title: string;
+  image: any;
+  data?: { level: 'normal' | 'medium' | 'high' };
+  classes?: string;
+};
+
 const DecisionTiles = ({
   title,
   image,
   data = { level: 'normal' },
   classes,
-}: any) => {
+}: DecisionTilesProps) => {
   return (
     <View className={'p-3 rounded-lg w-[48%] bg-white ' + classes}>
       <Text className='text-xl text-secondary-main font-pSansBold mb-2'>

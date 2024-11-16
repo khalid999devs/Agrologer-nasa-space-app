@@ -1,6 +1,5 @@
 import { Tabs } from 'expo-router';
 import { Image, ImageSourcePropType, Text, View } from 'react-native';
-
 import { icons } from '@/constants';
 
 const TabIcon = ({
@@ -13,16 +12,20 @@ const TabIcon = ({
   text: string;
 }) => (
   <View
-    className={`flex-1 flex-row justify-center items-center rounded-full ${focused ? 'bg-general-300 opacity-100' : 'opacity-70'}`}
+    className={`flex flex-row items-center justify-center rounded-full ${
+      focused ? 'bg-general-300 opacity-100' : 'opacity-70'
+    } w-20 h-12`}
   >
     <View
-      className={`rounded-full w-auto h-10 items-center justify-center ${focused ? 'bg-general-400' : ''}`}
+      className={`rounded-full w-full h-full items-center justify-center ${
+        focused ? 'bg-general-400' : ''
+      }`}
     >
       <Image
         source={source}
         tintColor='white'
         resizeMode='contain'
-        className='w-6 h-6'
+        className='w-7 h-7 mb-1'
       />
       <Text className='text-xs text-zinc-200'>{text || 'Home'}</Text>
     </View>
@@ -32,21 +35,23 @@ const TabIcon = ({
 export default function Layout() {
   return (
     <Tabs
-      initialRouteName='index'
+      initialRouteName='home'
       screenOptions={{
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'white',
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#02A05E',
-          paddingBottom: 0, // ios only
-          overflow: 'hidden',
-          height: 68,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexDirection: 'row',
+          height: 78,
           position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          paddingBottom: 22, // Add padding for better iOS alignment
+          paddingTop: 0,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         },
       }}
     >
@@ -70,7 +75,6 @@ export default function Layout() {
           ),
         }}
       />
-
       <Tabs.Screen
         name='notifications'
         options={{
@@ -85,7 +89,6 @@ export default function Layout() {
           ),
         }}
       />
-
       <Tabs.Screen
         name='profile'
         options={{

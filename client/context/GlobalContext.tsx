@@ -17,6 +17,8 @@ export interface GlobalContextType {
   setIsDeviceConnected?: (value: boolean) => void;
   user: any;
   setUser: any;
+  accessToken: string | null;
+  setAccessToken: (value: string | null) => void;
 }
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
@@ -29,6 +31,7 @@ export const GlobalContextProvider = ({
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [isLoading, setisLoading] = useState(true);
   const [isDeviceConnected, setIsDeviceConnected] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>('');
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -37,6 +40,7 @@ export const GlobalContextProvider = ({
     const getData = async () => {
       try {
         const accessToken = await AsyncStorage.getItem('accessToken');
+        setAccessToken(accessToken);
         // if (isMounted) {
         //   setisLoggedIn(!!accessToken);
         // }
@@ -45,6 +49,8 @@ export const GlobalContextProvider = ({
         });
         if (res.data.succeed) {
           setUser(res.data?.user || {});
+
+          setIsDeviceConnected(res.data?.user?.dashboard?.deviceStats);
           setisLoggedIn(true);
         }
       } catch (error) {
@@ -76,6 +82,8 @@ export const GlobalContextProvider = ({
         setIsDeviceConnected,
         user,
         setUser,
+        accessToken,
+        setAccessToken,
       }}
     >
       {children}

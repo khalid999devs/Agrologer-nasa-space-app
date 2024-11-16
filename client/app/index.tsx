@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import React, { useEffect } from 'react';
 import { Redirect } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalContext';
@@ -21,9 +22,7 @@ const Index = () => {
   }
 
   return (
-    <Redirect
-      href={!isLoggedIn ? '/(routes)/Onboarding' : '/(routes)/userInfo'}
-    />
+    <Redirect href={!isLoggedIn ? '/(routes)/Onboarding' : '/(tabs)/home'} />
   );
 };
 

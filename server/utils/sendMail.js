@@ -22,12 +22,15 @@ const mailer = async (data, mode) => {
   const { subject, body, text } = htmlCreator(mode, data);
 
   let mailContent = {
-    from: `GOLDEN DOT PROPERTIES LTD. <${process.env.SERVER_EMAIL}>`,
+    from: `TEAM AGROLOGER. <${process.env.SERVER_EMAIL}>`,
     to: `${data.client.email}`,
     subject: subject,
     html: body ? EmailCover(body) : null,
     text: text ? EmailTextCover(text) : null,
   };
+
+  console.log(body);
+
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailContent, function (error, mailData) {
       const date = new Date();

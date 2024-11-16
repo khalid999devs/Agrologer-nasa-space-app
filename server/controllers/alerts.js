@@ -8,11 +8,25 @@ const {
 
 const getAlerts = async (req, res) => {
   const userId = req.user.id;
-  const result = await alerts.findAll({ where: { userId } });
+  const result = await alerts.findAll({
+    where: { userId },
+    limit: 15,
+    order: [['createdAt', 'DESC']],
+  });
   res.json({
     succeed: true,
     msg: 'Successfully fetched the alerts!',
     alerts: result,
+  });
+};
+
+const updateAlert = async (req, res) => {
+  const userId = req.user.id;
+  await alerts.update({ read: true }, { where: { userId } });
+
+  res.json({
+    succeed: true,
+    msg: 'Successfully updated the read status!',
   });
 };
 
@@ -39,4 +53,4 @@ const removeAlert = async (req, res) => {
   });
 };
 
-module.exports = { getAlerts, addAlert, removeAlert };
+module.exports = { getAlerts, addAlert, removeAlert, updateAlert };

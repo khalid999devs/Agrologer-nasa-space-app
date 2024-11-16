@@ -4,6 +4,7 @@ const {
   updateUser,
   loginUser,
   verifyOTP,
+  sendEmailToClient,
 } = require('../controllers/users');
 const clientValidate = require('../middlewares/clientTokenVerify');
 const { clientRegValidate } = require('../middlewares/clientValidate');
@@ -17,5 +18,7 @@ router.post('/login', loginUser);
 router.get('/get-user', clientValidate, getUser);
 
 router.put('/update', clientValidate, updateUser);
+
+router.post('/send-device-request', clientValidate, sendEmailToClient);
 
 module.exports = router;

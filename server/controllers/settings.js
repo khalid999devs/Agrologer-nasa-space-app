@@ -25,7 +25,6 @@ const updateSetting = async (req, res) => {
   res.json({
     succeed: true,
     msg: 'Successfully updated the settings!',
-    dashboard,
   });
 };
 

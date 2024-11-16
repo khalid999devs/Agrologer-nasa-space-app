@@ -1,4 +1,4 @@
-const { agrolyzers } = require('../models');
+const { agrolyzers, dashboards } = require('../models');
 const {
   NotFoundError,
   BadRequestError,
@@ -10,12 +10,40 @@ const { redis } = require('../utils/redis');
 
 const getAgrolyzer = async (req, res) => {
   const userId = req.user.id;
+  let mode = req.params.mode;
+  let update = req.params.update;
+  console.log(update);
+
+  mode = mode ? JSON.parse(mode) : false;
+  update = update ? JSON.parse(update) : true;
+
   const result = await agrolyzers.findOne({ where: { userId } });
-  res.json({
-    succeed: true,
-    msg: 'Successfully fetched the agrolyzerData!',
-    alerts: result,
-  });
+  if (!result) {
+    return res.json({
+      succeed: false,
+      msg: 'No registered device found!',
+    });
+  }
+
+  if (mode === false) {
+    if (update)
+      await dashboards.update({ deviceStats: true }, { where: { userId } });
+    res.json({
+      succeed: true,
+      msg: 'Successfully Connected the Agrolyzer!',
+      agrolyzer: result,
+      connected: update ? true : false,
+    });
+  } else if (mode === true) {
+    if (update)
+      await dashboards.update({ deviceStats: false }, { where: { userId } });
+    return res.json({
+      succeed: true,
+      msg: 'Successfully disconnected the Agrolyzer!',
+      agrolyzer: result,
+      connected: update ? false : true,
+    });
+  }
 };
 
 const updateAgrolyzer = async (req, res) => {

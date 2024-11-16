@@ -15,6 +15,7 @@ const {
 } = require('../errors');
 const { sendToken } = require('../utils/createToken');
 const twilio = require('twilio');
+const mailer = require('../utils/sendMail');
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -103,6 +104,30 @@ const verifyOTP = async (req, res) => {
   sendToken(tokenData, res);
 };
 
+const sendEmailToClient = async (req, res) => {
+  const { fullName, phoneNum } = req.body;
+
+  mailer(
+    {
+      info: {
+        subject: `Agrolyzer Device Request from ${fullName}`,
+        body: `I am ${fullName}, I want a registered Agrolyzer device. Please contact me as soon as possible.
+
+Regards,
+${fullName},
+Phone number: ${phoneNum}
+          `,
+      },
+      client: {
+        fullName: 'Agrologer Team',
+        email: process.env.AUTHORITY_EMAIL,
+      },
+    },
+    'custom'
+  );
+  res.json({ succeed: true, msg: 'Device Request Sent!' });
+};
+
 const getUser = async (req, res) => {
   const user = req.user;
   const userInfo = await users.findOne({
@@ -141,4 +166,5 @@ module.exports = {
   verifyOTP,
   getUser,
   updateUser,
+  sendEmailToClient,
 };

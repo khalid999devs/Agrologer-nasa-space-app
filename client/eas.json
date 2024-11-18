@@ -6,37 +6,13 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_SERVER_URI": "https://agrologer-nasa-space-app.onrender.com",
-        "EXPO_PUBLIC_WS_SERVER_URI": "https://agrologer-nasa-space-app-1.onrender.com",
-        "EXPO_PUBLIC_GMAP_API_KEY": "AIzaSyAH9LjuM-ybFL53h1PpiaA6oJTQ3KHMnII",
-        "EXPO_PUBLIC_PERMITTED_CONTACTS": "+8801988892068",
-        "APP_ICON": "./assets/images/icon.png",
-        "APP_NAME": "Agrologer"
-      }
+      "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_SERVER_URI": "https://agrologer-nasa-space-app.onrender.com",
-        "EXPO_PUBLIC_WS_SERVER_URI": "https://agrologer-nasa-space-app-1.onrender.com",
-        "EXPO_PUBLIC_GMAP_API_KEY": "AIzaSyAH9LjuM-ybFL53h1PpiaA6oJTQ3KHMnII",
-        "EXPO_PUBLIC_PERMITTED_CONTACTS": "+8801988892068",
-        "APP_ICON": "./assets/images/icon.png",
-        "APP_NAME": "Agrologer"
-      }
+      "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true,
-      "env": {
-        "EXPO_PUBLIC_SERVER_URI": "https://agrologer-nasa-space-app.onrender.com",
-        "EXPO_PUBLIC_WS_SERVER_URI": "https://agrologer-nasa-space-app-1.onrender.com",
-        "EXPO_PUBLIC_GMAP_API_KEY": "AIzaSyAH9LjuM-ybFL53h1PpiaA6oJTQ3KHMnII",
-        "EXPO_PUBLIC_PERMITTED_CONTACTS": "+8801988892068",
-        "APP_ICON": "./assets/images/icon.png",
-        "APP_NAME": "Agrologer"
-      }
+      "autoIncrement": true
     }
   },
   "submit": {

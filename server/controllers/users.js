@@ -130,6 +130,7 @@ Phone number: ${phoneNum}
 
 const getUser = async (req, res) => {
   const user = req.user;
+
   const userInfo = await users.findOne({
     include: [
       { model: settings },

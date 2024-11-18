@@ -9,9 +9,31 @@ import { reqs } from '@/axios/requests';
 
 const NotificationsScreen = () => {
   const toast = useToast();
-  const { accessToken }: any = useGlobalContext();
-  const [notifications, setNotifications] = useState([]);
+  const { accessToken, ws }: any = useGlobalContext();
+  const [notifications, setNotifications] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (ws) {
+      ws.onmessage = (event: any) => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'notification') {
+          setNotifications((prevNotification: any) => [
+            ...prevNotification,
+            data.notification,
+          ]);
+        }
+      };
+
+      ws.onerror = (error: any) => {
+        console.error('WebSocket error:', error);
+      };
+
+      ws.onclose = (event: any) => {
+        console.log('WebSocket connection closed:', event);
+      };
+    }
+  }, [ws]);
 
   useEffect(() => {
     if (accessToken) {
@@ -84,7 +106,7 @@ const NotificationsScreen = () => {
         ) : (
           <View className='mt-8'>
             <Text className='text-center text-base'>
-              No Notifications Available!
+              No Notifications Available right now!
             </Text>
           </View>
         )}

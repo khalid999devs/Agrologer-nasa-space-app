@@ -12,7 +12,6 @@ const getAgrolyzer = async (req, res) => {
   const userId = req.user.id;
   let mode = req.params.mode;
   let update = req.params.update;
-  console.log(update);
 
   mode = mode ? JSON.parse(mode) : false;
   update = update ? JSON.parse(update) : true;

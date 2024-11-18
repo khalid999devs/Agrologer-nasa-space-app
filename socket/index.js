@@ -2,6 +2,7 @@ const express = require('express');
 const { WebSocketServer } = require('ws');
 const geolib = require('geolib');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
@@ -22,28 +23,45 @@ const validateConnection = (token, ws) => {
 const wss = new WebSocketServer({ port: 8080 });
 
 wss.on('connection', (ws) => {
+  console.log('New Websocket connection established');
+
   ws.on('message', (message) => {
     try {
       const data = JSON.parse(message);
 
       if (data.type === 'auth') {
         const user = validateConnection(data.token, ws);
-        if (!user) return;
-
         const userInfo = { user, location: data.location };
+        console.log(user, userInfo);
+
+        if (!user.id) {
+          throw new Error('Invalid token');
+        }
+
         userMap.set(ws, userInfo); // Store user and location info in Map
+        // console.log('User authenticated:', data.token);
       }
 
       if (data.type === 'community' && data.role === 'chat') {
+        console.log(data);
+
         userMap.forEach((info, clientWs) => {
           if (clientWs.readyState === WebSocket.OPEN) {
-            clientWs.send(JSON.stringify(data.msg));
+            clientWs.send(
+              JSON.stringify({ msg: data.msg, type: 'community', role: 'chat' })
+            );
           }
         });
       } else if (data.type === 'notification' && data.role === 'model') {
         userMap.forEach((info, clientWs) => {
           if (clientWs.readyState === WebSocket.OPEN) {
-            clientWs.send(JSON.stringify(data.notification));
+            clientWs.send(
+              JSON.stringify({
+                notification: data.notification,
+                type: 'notification',
+                role: 'model',
+              })
+            );
           }
         });
       } else if (data.type === 'irrigation' && data.role === 'notify') {
@@ -53,13 +71,25 @@ wss.on('connection', (ws) => {
         );
         targetusers.forEach((user) => {
           if (user.ws.readyState === WebSocket.OPEN) {
-            user.ws.send(JSON.stringify(data));
+            user.ws.send(
+              JSON.stringify({
+                irrigation: data.irrigation,
+                type: 'irrigation',
+                role: 'notify',
+              })
+            );
           }
         });
       } else if (data.type === 'update' && data.role === 'server') {
         userMap.forEach((info, clientWs) => {
           if (clientWs.readyState === WebSocket.OPEN) {
-            clientWs.send(JSON.stringify(data));
+            clientWs.send(
+              JSON.stringify({
+                update: data.update,
+                type: 'update',
+                role: 'server',
+              })
+            );
           }
         });
       }
@@ -68,8 +98,13 @@ wss.on('connection', (ws) => {
     }
   });
 
-  ws.on('close', () => {
+  ws.on('close', (code, reason) => {
+    console.log(`WebSocket connection closed: code=${code}, reason=${reason}`);
     userMap.delete(ws);
+  });
+
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
   });
 });
 
@@ -80,7 +115,7 @@ const findNearbyIrrigations = (userLat, userLon) => {
   userMap.forEach((info, ws) => {
     const distance = geolib.getDistance(
       { latitude: userLat, longitude: userLon },
-      { latitude: info.location.lat, longitude: info.location.lon }
+      { latitude: info.location.lat, longitude: info.location.long }
     );
     if (distance <= 5000) {
       nearbyUsers.push({ ws, ...info });

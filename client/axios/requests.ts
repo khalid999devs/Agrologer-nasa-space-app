@@ -38,4 +38,9 @@ export const reqs = {
   //device
   GET_AGROLYZER: '/api/agrolyzer/get', //get
   SEND_DEVICE_REQUEST: '/api/users/send-device-request', //post
+
+  //community
+  GET_DISCUSSIONS: '/api/discussions/get', //post
+  SEND_DISCUSSION: '/api/discussions/add', //post
+  REMOVE_DISCUSSION: '/api/discussions/remove', //delete /:discussionId
 };

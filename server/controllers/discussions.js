@@ -9,6 +9,7 @@ const deleteFile = require('../utils/deleteFile');
 
 const addDiscussion = async (req, res) => {
   let { text, replyTo, time, mentions } = req.body;
+
   replyTo = replyTo ? JSON.parse(replyTo) : {};
   mentions = mentions ? JSON.parse(mentions) : [];
   const userId = req.user.id;
@@ -36,8 +37,9 @@ const addDiscussion = async (req, res) => {
     userId,
   };
 
-  const dscussion = await discussions.create(newDiscussion);
-  let newAlert = null;
+  const discussion = await discussions.create(newDiscussion);
+
+  let newAlert = {};
   if (replyTo.id) {
     newAlert = await alerts.create({
       userId: replyTo.id,
@@ -48,10 +50,12 @@ const addDiscussion = async (req, res) => {
     });
   }
 
+  // console.log(discussion);
   res.json({
     succeed: true,
+    msg: 'Successfully added discussion!',
     alert: newAlert,
-    dscussion,
+    discussion,
   });
 };
 

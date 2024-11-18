@@ -44,6 +44,7 @@ import BookIcon from '@/assets/icons/bookIcon.png';
 import FloodIcon from '@/assets/icons/flood.png';
 import DroughtIcon from '@/assets/icons/drought.png';
 import attached from '@/assets/icons/attached.png';
+import LogoutIcon from '@/assets/icons/logout.png';
 
 import headerLogo from '@/assets/images/header-logo.png';
 import screenLogo from '@/assets/images/screen-logo.png';
@@ -84,6 +85,7 @@ export const images = {
 };
 
 export const icons = {
+  LogoutIcon,
   attached,
   FloodIcon,
   DroughtIcon,

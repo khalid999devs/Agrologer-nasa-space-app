@@ -17,9 +17,9 @@ const HomeScreen = () => {
   const [dashboard, setDashboard] = useState<any>({});
 
   useEffect(() => {
-    if (accessToken && user.dashboard.id) {
+    if (accessToken && user.dashboard?.id) {
       axios
-        .get(`${reqs.GET_DASHBOARD}/${user.dashboard.id}`, {
+        .get(`${reqs.GET_DASHBOARD}/${user.dashboard?.id}`, {
           headers: { authorization: `bearer ${accessToken}` },
         })
         .then((res) => {
@@ -35,18 +35,18 @@ const HomeScreen = () => {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    if (accessToken && user.dashboard.id) {
+    if (accessToken && user.dashboard?.id) {
       axios
         .put(
           reqs.UPDATE_DASHBOARD,
-          { dashboardId: user.dashboard.id },
+          { dashboardId: user.dashboard?.id },
           {
             headers: { authorization: `bearer ${accessToken}` },
           }
         )
         .then((res) => {
           if (res.data.succeed) {
-            setDashboard(res.data.dashboard);
+            setDashboard(res.data?.dashboard);
           }
           setRefreshing(false);
         })

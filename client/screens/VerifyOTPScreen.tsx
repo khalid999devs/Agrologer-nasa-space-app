@@ -5,8 +5,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import OTPTextInput from 'react-native-otp-textinput';
 import { images } from '@/constants';
 import PrimaryButton from '@/components/Buttons/PrimaryButton';
@@ -16,29 +17,49 @@ import axios from 'axios';
 import { reqs } from '@/axios/requests';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useGlobalContext } from '@/context/GlobalContext';
+import Modal from '@/components/utils/Modal';
+
+const verifiedNums = process.env.EXPO_PUBLIC_PERMITTED_CONTACTS;
 
 const VerifyOTPScreen = () => {
   const { phoneNum, mode } = useLocalSearchParams();
-  const { setUser }: any = useGlobalContext();
+  const { setUser, setTriggerUpdate }: any = useGlobalContext();
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const [byPassOTP, setByPassOTP] = useState(false);
+
+  useEffect(() => {
+    if (phoneNum?.length > 0) {
+      if (!verifiedNums?.split(',').includes(phoneNum as string)) {
+        setByPassOTP(true);
+      }
+    }
+  }, [phoneNum]);
 
   const handleSubmit = () => {
-    if (otp === '') {
+    if (otp === '' && !byPassOTP) {
       toast.show('Please fill the fields!', {
         placement: 'bottom',
       });
     } else {
       setLoading(true);
       axios
-        .post(reqs.VERIFY_USER_OTP, { phoneNum, otp, mode })
+        .post(reqs.VERIFY_USER_OTP, {
+          phoneNum,
+          otp,
+          mode,
+          byPassOTP: byPassOTP,
+        })
         .then(async (res) => {
           setLoading(false);
+          setByPassOTP(false);
           if (res.data.succeed) {
-            console.log(res.data);
             await AsyncStorage.setItem('accessToken', res.data.accessToken);
-            if (res.data.result) setUser(res.data.result);
+            if (res.data.result) {
+              setUser(res.data.result);
+              setTriggerUpdate((prev: boolean) => !prev);
+            }
             router.push({
               pathname: mode === 'reg' ? '/(routes)/userInfo' : '/(tabs)/home',
               params: {
@@ -49,6 +70,7 @@ const VerifyOTPScreen = () => {
         })
         .catch((err) => {
           setLoading(false);
+          setByPassOTP(false);
           toast.show(
             err.response?.data.msg || 'Something is wrong! Please try again.'
           );
@@ -109,6 +131,36 @@ const VerifyOTPScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* modal */}
+        <Modal isOpen={byPassOTP} onClose={() => {}}>
+          <Pressable
+            onPress={() => {}}
+            className='bg-onPrimary-main rounded-2xl p-4'
+          >
+            <View className='mb-2'>
+              <Text className='text-xl font-pSansBold'>
+                Twilio free version notice!
+              </Text>
+            </View>
+            <View>
+              <Text className='text-md opacity-70'>
+                Hi, this prototype app is using Twilio for OTP verification. It
+                is running on free mode. It need verified phone numbers to
+                verify it in free mode. You can bypass the OTP verification by
+                clicking the button below.
+              </Text>
+            </View>
+            <View className='mt-5'>
+              <PrimaryButton
+                classes='mb-3'
+                text='Bypass OTP Verification'
+                onPress={handleSubmit}
+                disabled={loading}
+              />
+            </View>
+          </Pressable>
+        </Modal>
       </View>
     </KeyboardAvoidingView>
   );

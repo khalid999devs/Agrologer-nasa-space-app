@@ -8,6 +8,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { reqs } from '@/axios/requests';
+import { router } from 'expo-router';
 
 export interface GlobalContextType {
   isLoggedIn: boolean;
@@ -20,6 +21,8 @@ export interface GlobalContextType {
   accessToken: string | null;
   setAccessToken: (value: string | null) => void;
   ws: WebSocket | null;
+  logoutUser: () => void;
+  setTriggerUpdate: (value: boolean) => void;
 }
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
@@ -35,6 +38,7 @@ export const GlobalContextProvider = ({
   const [accessToken, setAccessToken] = useState<string | null>('');
   const [user, setUser] = useState({});
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [triggerUpdate, setTriggerUpdate] = useState(false);
 
   // Set up WebSocket connection
   const setupWebSocket = (token: string | null, location: any) => {
@@ -89,6 +93,8 @@ export const GlobalContextProvider = ({
       });
       if (res.data.succeed) {
         setUser(res.data?.user || {});
+        console.log(res.data);
+
         setAccessToken(accessToken);
         setIsDeviceConnected(res.data?.user?.dashboard?.deviceStats);
         setisLoggedIn(true);
@@ -113,7 +119,31 @@ export const GlobalContextProvider = ({
       isMounted = false;
       ws?.close();
     };
-  }, []);
+  }, [triggerUpdate]);
+
+  const logoutUser = async () => {
+    try {
+      await AsyncStorage.removeItem('accessToken');
+      setisLoggedIn(false);
+      isLoading && setisLoading(false);
+      setIsDeviceConnected(false);
+      setUser({
+        fullName: 'Example Person',
+        level: {
+          status: 'Expert Farmer',
+        },
+        dashboard: {
+          deviceStats: false,
+        },
+      });
+      setAccessToken('');
+      ws?.close();
+      router.replace('/(routes)/Onboarding');
+    } catch (error) {
+      console.log('Failed to remove access token from async storage', error);
+      return;
+    }
+  };
 
   return (
     <GlobalContext.Provider
@@ -127,6 +157,8 @@ export const GlobalContextProvider = ({
         accessToken,
         setAccessToken,
         ws,
+        logoutUser,
+        setTriggerUpdate,
       }}
     >
       {children}

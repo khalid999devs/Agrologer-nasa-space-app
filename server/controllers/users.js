@@ -23,6 +23,7 @@ const client = twilio(accountSid, authToken);
 
 const registerUser = async (req, res) => {
   const userData = req.user;
+  const { byPassOTP = false } = req.body;
 
   if (req.mode === 'update') {
     await users.update(userData);
@@ -33,13 +34,14 @@ const registerUser = async (req, res) => {
   }
   const user = await users.create(userData);
 
-  await client.verify.v2
-    ?.services(process.env.TWILIO_SERVICE_SID)
-    .verifications.create({
-      channel: 'sms',
-      to: userData.phoneNum,
-    });
-
+  if (!byPassOTP) {
+    await client.verify.v2
+      ?.services(process.env.TWILIO_SERVICE_SID)
+      .verifications.create({
+        channel: 'sms',
+        to: userData.phoneNum,
+      });
+  }
   res.json({
     succeed: true,
     msg: 'user created successfully',
@@ -48,7 +50,7 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { phoneNum } = req.body;
+  const { phoneNum, byPassOTP = false } = req.body;
 
   let user = await users.findOne({ where: { phoneNum } });
   let mode = 'login';
@@ -56,14 +58,14 @@ const loginUser = async (req, res) => {
     user = await users.create({ phoneNum });
     mode = 'reg';
   }
-
-  await client.verify.v2
-    ?.services(process.env.TWILIO_SERVICE_SID)
-    .verifications.create({
-      channel: 'sms',
-      to: user.phoneNum,
-    });
-
+  if (!byPassOTP) {
+    await client.verify.v2
+      ?.services(process.env.TWILIO_SERVICE_SID)
+      .verifications.create({
+        channel: 'sms',
+        to: user.phoneNum,
+      });
+  }
   res.json({
     succeed: true,
     msg: 'OTP sent!',
@@ -72,13 +74,15 @@ const loginUser = async (req, res) => {
 };
 
 const verifyOTP = async (req, res) => {
-  const { phoneNum, otp, mode } = req.body;
-  await client.verify.v2
-    .services(process.env.TWILIO_SERVICE_SID)
-    .verificationChecks.create({
-      to: phoneNum,
-      code: otp,
-    });
+  const { phoneNum, otp, mode, byPassOTP = false } = req.body;
+  if (!byPassOTP) {
+    await client.verify.v2
+      .services(process.env.TWILIO_SERVICE_SID)
+      .verificationChecks.create({
+        to: phoneNum,
+        code: otp,
+      });
+  }
 
   let user = await users.findOne({ where: { phoneNum } });
   let tokenData = {
@@ -94,7 +98,7 @@ const verifyOTP = async (req, res) => {
     tokenData.setting = setting;
     await predictions.create({ userId: user.id });
     await weathers.create({ userId: user.id });
-    await agrolyzers.create({ userId: user.id });
+    // await agrolyzers.create({ userId: user.id });
     // await user.update(farmerData, { where: { id: user.id } });
   }
   if (!user) {

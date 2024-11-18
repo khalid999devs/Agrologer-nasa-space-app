@@ -7,7 +7,7 @@ import ProfileMenu from '@/components/Profile/ProfileMenu';
 import { useGlobalContext } from '@/context/GlobalContext';
 
 const ProfileScreen = () => {
-  const { user }: any = useGlobalContext();
+  const { user, logoutUser }: any = useGlobalContext();
 
   return (
     <ScrollView className='pb-12'>
@@ -17,6 +17,7 @@ const ProfileScreen = () => {
           fullName={user.fullName || 'Yunus Mia'}
           designation={user.level?.status || 'Intermediate level'}
           image={images.placeholder}
+          logoutUser={logoutUser}
         />
       </View>
       <View className='px-8 mt-2'>

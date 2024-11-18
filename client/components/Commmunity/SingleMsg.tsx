@@ -4,7 +4,7 @@ import { images } from '@/constants';
 
 interface SingleMsg {
   isUser?: boolean;
-  data: { image?: string; text?: string };
+  data: { image?: string; text?: string; owner?: any; time?: any };
   index: number;
 }
 
@@ -23,13 +23,27 @@ const SingleMsg = ({ isUser, data, index }: SingleMsg) => {
         </View>
       )}
       <View
-        className={`${isUser ? 'bg-primary-main' : 'bg-onPrimary-main'} p-3 text-left rounded-lg max-w-[65%]`}
+        className={`${isUser ? 'bg-primary-main' : 'bg-onPrimary-main'} p-3 pt-2 text-left rounded-lg max-w-[65%]`}
       >
+        <Text
+          className={`text-md font-pSansBold mb-2 ${isUser ? 'text-onPrimary-main' : 'text-primary-light'}`}
+        >
+          {data?.owner?.fullName || 'Random User'}
+        </Text>
         <Text
           className={`${isUser ? 'text-body-main' : 'text-secondary-main'}`}
         >
           {data?.text}
         </Text>
+        {data?.time && (
+          <View className='flex w-full items-end justify-end'>
+            <Text
+              className={`text-xs text-right mt-3 ${isUser ? 'text-onPrimary-main' : 'text-secondary-light'}`}
+            >
+              {new Date(data.time).toLocaleString()}
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );

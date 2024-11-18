@@ -43,7 +43,7 @@ const DeviceScreen = () => {
             setIsSensorData(res.data.agrolyzer?.sensorData);
             setTodos(res.data.agrolyzer?.todos);
           } else {
-            toast.show(res.data.message);
+            toast.show(res.data.msg);
             demo = true;
           }
           setLoading(false);

@@ -14,6 +14,8 @@ import { useToast } from 'react-native-toast-notifications';
 import axios from 'axios';
 import { reqs } from '@/axios/requests';
 
+const verifiedNums = process.env.EXPO_PUBLIC_PERMITTED_CONTACTS;
+
 const SignUpScreen = () => {
   const [userData, setUserData] = useState({
     fullName: '',
@@ -26,8 +28,17 @@ const SignUpScreen = () => {
     // Custom validation
     if (userData.fullName && userData.phoneNum) {
       setLoading(true);
+      let sendData = {
+        ...userData,
+        byPassOTP: false,
+      };
+      if (userData.phoneNum?.length > 0) {
+        if (!verifiedNums?.split(',').includes(userData.phoneNum as string)) {
+          sendData.byPassOTP = true;
+        }
+      }
       axios
-        .post(reqs.USER_REGISTRATION, userData)
+        .post(reqs.USER_REGISTRATION, sendData)
         .then((res) => {
           if (res.data.succeed) {
             console.log(res.data);

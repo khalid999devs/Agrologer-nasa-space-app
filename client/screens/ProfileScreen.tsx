@@ -9,8 +9,6 @@ import { useGlobalContext } from '@/context/GlobalContext';
 const ProfileScreen = () => {
   const { user }: any = useGlobalContext();
 
-  console.log(user);
-
   return (
     <ScrollView className='pb-12'>
       <Header />

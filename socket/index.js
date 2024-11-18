@@ -3,27 +3,34 @@ const { WebSocketServer } = require('ws');
 const geolib = require('geolib');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 let userMap = new Map();
+
+app.use(cors());
 
 const validateConnection = (token, ws) => {
   try {
     const validClient = jwt.verify(token, process.env.CLIENT_SECRET);
     return validClient;
   } catch (error) {
-    userMap.delete(ws); // Remove ws from Map if token is invalid
+    userMap.delete(ws);
     ws.close();
     return null;
   }
 };
 
-const wss = new WebSocketServer({ port: 8080 });
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
-  console.log('New Websocket connection established');
+  console.log('New WebSocket connection established');
 
   ws.on('message', (message) => {
     try {
@@ -34,17 +41,14 @@ wss.on('connection', (ws) => {
         const userInfo = { user, location: data.location };
         console.log(user, userInfo);
 
-        if (!user.id) {
+        if (!user || !user.id) {
           throw new Error('Invalid token');
         }
 
-        userMap.set(ws, userInfo); // Store user and location info in Map
-        // console.log('User authenticated:', data.token);
+        userMap.set(ws, userInfo);
       }
 
       if (data.type === 'community' && data.role === 'chat') {
-        console.log(data);
-
         userMap.forEach((info, clientWs) => {
           if (clientWs.readyState === WebSocket.OPEN) {
             clientWs.send(
@@ -65,11 +69,11 @@ wss.on('connection', (ws) => {
           }
         });
       } else if (data.type === 'irrigation' && data.role === 'notify') {
-        const targetusers = findNearbyIrrigations(
+        const targetUsers = findNearbyIrrigations(
           data.location.lat,
           data.location.long
         );
-        targetusers.forEach((user) => {
+        targetUsers.forEach((user) => {
           if (user.ws.readyState === WebSocket.OPEN) {
             user.ws.send(
               JSON.stringify({
@@ -108,7 +112,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-// Function to find nearby irrigations (using Map instead of array)
 const findNearbyIrrigations = (userLat, userLon) => {
   const nearbyUsers = [];
 
@@ -125,6 +128,18 @@ const findNearbyIrrigations = (userLat, userLon) => {
   return nearbyUsers;
 };
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+process.on('SIGTERM', () => {
+  console.log('Server shutting down...');
+  wss.close(() => {
+    console.log('WebSocket server closed.');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('Server shutting down...');
+  wss.close(() => {
+    console.log('WebSocket server closed.');
+    process.exit(0);
+  });
 });

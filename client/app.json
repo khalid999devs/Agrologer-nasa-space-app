@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Agrologer",
-    "slug": "Agrologer",
+    "slug": "agrologer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -21,7 +21,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.Agrologer"
+      "package": "com.anonymous.Agrologer",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -40,6 +44,12 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "90f7b3db-957c-4386-850c-fc0018f47b78"
+      }
+    },
+    "owner": "khalid999devs"
   }
 }

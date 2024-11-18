@@ -26,7 +26,7 @@ const SingleMsg = ({ isUser, data, index }: SingleMsg) => {
         className={`${isUser ? 'bg-primary-main' : 'bg-onPrimary-main'} p-3 pt-2 text-left rounded-lg max-w-[65%]`}
       >
         <Text
-          className={`text-md font-pSansBold mb-2 ${isUser ? 'text-onPrimary-main' : 'text-primary-light'}`}
+          className={`text-md font-pSansBold mb-2 ${isUser ? 'text-body-light' : 'text-primary-light'}`}
         >
           {data?.owner?.fullName || 'Random User'}
         </Text>
@@ -38,7 +38,7 @@ const SingleMsg = ({ isUser, data, index }: SingleMsg) => {
         {data?.time && (
           <View className='flex w-full items-end justify-end'>
             <Text
-              className={`text-xs text-right mt-3 ${isUser ? 'text-onPrimary-main' : 'text-secondary-light'}`}
+              className={`text-xs text-right mt-3 ${isUser ? 'text-onPrimary-main opacity-70' : 'text-secondary-light'}`}
             >
               {new Date(data.time).toLocaleString()}
             </Text>
